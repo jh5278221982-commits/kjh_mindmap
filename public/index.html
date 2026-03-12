@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>패션왕 강지현님의 마인드맵</title>
+  <link rel="stylesheet" as="style" crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsmind@0.5.3/style/jsmind.css" />
+
+  <style>
+    :root {
+      --bg-color: #f8f9fa;
+      --primary: #4f46e5;
+      /* 세련된 인디고 블루 */
+      --border: #e2e8f0;
+      --text-main: #1e293b;
+      --text-sub: #64748b;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', sans-serif;
+      background-color: var(--bg-color);
+      overflow: hidden;
+    }
+
+    /* 1. 협업 툴 스타일의 도트(점) 배경 */
+    #jsmind_container {
+      width: 100vw;
+      height: 100vh;
+      background-image: radial-gradient(#cbd5e1 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    /* 2. 플로팅 툴바 (상단 좌측) */
+    .toolbar {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      border: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+
+    .toolbar button {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-main);
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .toolbar button:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    .toolbar button.primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+    }
+
+    .toolbar button.primary:hover {
+      background: #4338ca;
+    }
+
+    .help-text {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-left: 10px;
+      align-self: center;
+    }
+
+    /* 3. 노드(가지) 디자인 세련되게 덮어쓰기 */
+    jmnode {
+      background-color: white;
+      color: var(--text-main);
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 10px 16px;
+      border: 1px solid #e2e8f0;
+      font-size: 14px;
+      font-weight: 500;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    jmnode:hover {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      border-color: #cbd5e1;
+    }
+
+    /* 선택된 노드 스타일 */
+    jmnode.selected {
+      background-color: #e0e7ff;
+      border-color: var(--primary);
+      color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+    }
+
+    /* 최상위 루트 노드 스타일 */
+    jmnode.root {
+      background-color: var(--text-main);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      padding: 12px 20px;
+    }
+
+    /* 4. 우측 사이드 패널 (상세 설정용) */
+    #side-panel {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      /* 평소엔 숨겨둠 */
+      width: 380px;
+      height: 100vh;
+      background: white;
+      box-shadow: -4px 0 15px rgba(0, 0, 0, 0.05);
+      z-index: 20;
+      transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid var(--border);
+    }
+
+    #side-panel.open {
+      right: 0;
+    }
+
+    .panel-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-header h3 {
+      margin: 0;
+      font-size: 16px;
+      color: var(--text-main);
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 280px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-sub);
+    }
+
+    .close-btn:hover {
+      color: var(--text-main);
+    }
+
+    .panel-content {
+      padding: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel-content label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .panel-content textarea {
+      flex-grow: 1;
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: none;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s;
+      background-color: #f8fafc;
+    }
+
+    .panel-content textarea:focus {
+      border-color: var(--primary);
+      background-color: white;
+    }
+
+    .panel-footer {
+      padding: 15px 20px;
+      border-top: 1px solid var(--border);
+      text-align: right;
+      background: #f8fafc;
+    }
+
+    .panel-footer button {
+      background: var(--text-main);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .panel-footer button:hover {
+      background: #0f172a;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="toolbar">
+    <button class="primary" onclick="saveMindMap()">💾 서버에 전체 저장</button>
+    <button onclick="addNode()">➕ 하위 추가 (Insert)</button>
+    <button onclick="deleteNode()">🗑️ 삭제 (Delete)</button>
+    <button onclick="openDetailPanel()" style="background: #e2e8f0; border-color: #cbd5e1; color: #0f172a;">📝 상세 내용 열기</button>
+    <span class="help-text">💡 노드 선택 후 <b>[Space]</b>를 누르면 상세 패널이 열리고, <b>[ESC]</b>를 누르면 닫힙니다.</span>
+  </div>
+
+  <div id="jsmind_container"></div>
+
+  <div id="side-panel">
+    <div class="panel-header">
+      <h3 id="panel-title">노드 이름</h3>
+      <button class="close-btn" onclick="closePanel()">✕</button>
+    </div>
+    <div class="panel-content">
+      <label for="node-detail">디테일 설정 및 기획 내용</label>
+      <textarea id="node-detail" placeholder="API 연동 규격, 예외 처리 조건, 상세 UI 설명 등 긴 내용을 이곳에 자유롭게 작성하세요..."></textarea>
+    </div>
+    <div class="panel-footer">
+      <button onclick="saveDetail()">적용하기</button>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jsmind@0.5.3/js/jsmind.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jsmind@0.5.3/js/jsmind.draggable-node.js"></script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC9HYLCfs_3fyXwlBJMu3ws8WiFnhm7xYE",
+      authDomain: "kjhmindmap.firebaseapp.com",
+      projectId: "kjhmindmap",
+      storageBucket: "kjhmindmap.firebasestorage.app",
+      messagingSenderId: "212830364220",
+      appId: "1:212830364220:web:f97b2e3b546f1aa9d89939"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let jm = null;
+    let currentNodeId = null;
+
+    const options = {
+      container: 'jsmind_container',
+      theme: 'primary',
+      editable: true,
+      view: {
+        engine: 'canvas',
+        hmargin: 100,
+        vmargin: 50,
+        line_width: 2,
+        line_color: '#cbd5e1'
+      }
+    };
+
+    // 💡 1. 초기화 및 데이터 로드 (외부 파일 의존성 100% 제거)
+    async function initMindMap() {
+      jm = new jsMind(options);
+
+      try {
+        const docRef = doc(db, "mindmaps", "chatbot_data");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          jm.show(docSnap.data().content);
+          console.log("서버(Firebase DB)에서 저장된 데이터를 불러왔습니다.");
+        } else {
+          console.log("DB가 비어있습니다. 코드에 내장된 '챗봇 기획' 데이터를 강제로 띄웁니다.");
+          
+          // 지현 님의 mindmap.json 데이터를 여기에 직접 박아넣었습니다!
+          const defaultData = {
+            "meta": { "name": "chatbot_flow", "author": "admin", "version": "1.0" },
+            "format": "node_tree",
+            "data": {
+              "id": "root",
+              "topic": "챗봇 기획",
+              "expanded": true,
+              "detail": "대화 형식이 아닌 선택 형식으로 진행한다.\n\n조치 방법은 하나의 이슈 선택 시 2~3개 정도의 방법들이 노출될 수 있도록 설계한다.",
+              "children": [
+                {
+                  "id": "node1",
+                  "topic": "첫인사",
+                  "expanded": true,
+                  "direction": "right",
+                  "detail": "안녕하세요 Axissoft 챗봇 입니다.",
+                  "children": [
+                    {
+                      "id": "node2",
+                      "topic": "OS 선택",
+                      "expanded": true,
+                      "children": [
+                        {
+                          "id": "node3",
+                          "topic": "Windows",
+                          "expanded": true,
+                          "children": [
+                            {
+                              "id": "node_1773207206007",
+                              "topic": "국가 선택",
+                              "expanded": true,
+                              "children": [
+                                {
+                                  "id": "node_1773207224312",
+                                  "topic": "한국",
+                                  "expanded": true,
+                                  "children": [
+                                    {
+                                      "id": "cdb6e9246fb59c71",
+                                      "topic": "수강 장소",
+                                      "expanded": true,
+                                      "children": [
+                                        { "id": "cdb721692d1284ba", "topic": "재설치 메시지", "expanded": true }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                { "id": "node_1773207225111", "topic": "일본", "expanded": true },
+                                { "id": "node_1773207226741", "topic": "그 외", "expanded": true }
+                              ]
+                            }
+                          ]
+                        },
+                        { "id": "node4", "topic": "macOS", "expanded": true },
+                        { "id": "node5", "topic": "Android", "expanded": true },
+                        { "id": "node6", "topic": "iOS", "expanded": true }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          };
+          jm.show(defaultData); // 100% 무조건 그려집니다.
+        }
+      } catch (error) {
+        console.error("데이터 로드 실패:", error);
+      }
+    }
+
+    // 2. Firebase에 저장하는 함수
+    window.saveMindMap = async function() {
+      if (!jm) return;
+      try {
+        const data = jm.get_data();
+        await setDoc(doc(db, "mindmaps", "chatbot_data"), {
+          content: data,
+          updatedAt: new Date()
+        });
+        alert("서버에 성공적으로 저장되었습니다!");
+      } catch (e) {
+        alert("저장 실패: " + e.message);
+      }
+    };
+
+    window.addNode = function () {
+      if (!jm) return;
+      const selected = jm.get_selected_node();
+      if (!selected) return alert("상위 가지를 먼저 클릭해서 선택해주세요.");
+      const node_id = "node_" + Date.now();
+      jm.add_node(selected, node_id, "새로운 기능");
+      setTimeout(() => { jm.select_node(node_id); }, 100);
+    };
+
+    window.deleteNode = function () {
+      if (!jm) return;
+      const selected = jm.get_selected_node();
+      if (!selected || selected.isroot) return alert("중심 주제는 삭제할 수 없습니다.");
+      jm.remove_node(selected);
+      window.closePanel();
+    };
+
+    window.openDetailPanel = function () {
+      if (!jm) return;
+      const selected = jm.get_selected_node();
+      if (selected) window.openPanel(selected);
+      else alert("상세 내용을 확인할 노드를 먼저 클릭해주세요.");
+    };
+
+    window.openPanel = function (node) {
+      currentNodeId = node.id;
+      document.getElementById('side-panel').classList.add('open');
+      document.getElementById('panel-title').innerText = node.topic;
+      document.getElementById('node-detail').value = (node.data && node.data.detail) ? node.data.detail : "";
+    };
+
+    window.closePanel = function () {
+      document.getElementById('side-panel').classList.remove('open');
+      currentNodeId = null;
+    };
+
+    window.saveDetail = function () {
+      if (!currentNodeId || !jm) return;
+      const text = document.getElementById('node-detail').value;
+      const node = jm.get_node(currentNodeId);
+      if (!node.data) node.data = {};
+      node.data.detail = text;
+      jm.update_node(currentNodeId, node.topic);
+      alert("상세 내용이 임시 적용되었습니다.");
+    };
+
+    document.addEventListener('keydown', function (event) {
+      const tagName = event.target.tagName.toLowerCase();
+      if (tagName === 'input' || tagName === 'textarea') return;
+
+      if (event.code === 'Space') {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        const selected = jm.get_selected_node();
+        if (selected) window.openPanel(selected);
+      }
+      if (event.code === 'Escape') {
+        window.closePanel();
+        jm.select_clear();
+      }
+    }, true);
+
+    window.onload = initMindMap;
+  </script>
+</body>
+</html>

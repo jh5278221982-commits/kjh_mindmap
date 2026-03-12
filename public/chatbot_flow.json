@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "name": "chatbot_flow",
+    "author": "admin",
+    "version": "1.0"
+  },
+  "format": "node_tree",
+  "data": {
+    "id": "root",
+    "topic": "챗봇 기획",
+    "expanded": true,
+    "detail": "대화 형식이 아닌 선택 형식으로 진행한다.\n\n조치 방법은 하나의 이슈 선택 시 2~3개 정도의 방법들이 노출될 수 있도록 설계한다.\n\nex. 재설치 메시지 반복 클릭\n1. 이렇게 한다\n방법1. ~~~\n방법2. ~~~\n방법3. ~~~\n\n2. 저렇게 한다\n방법1. ~~~\n방법2. ~~~\n방법3. ~~~\n\n3. 이렇게 저렇게 한다\n방법1. ~~~~\n방법2. ~~~~\n방법3. ~~~~",
+    "children": [
+      {
+        "id": "node1",
+        "topic": "첫인사",
+        "expanded": true,
+        "direction": "right",
+        "detail": "안녕하세요 Axissoft 챗봇 입니다.",
+        "children": [
+          {
+            "id": "node2",
+            "topic": "OS 선택",
+            "expanded": true,
+            "children": [
+              {
+                "id": "node3",
+                "topic": "Windows",
+                "expanded": true,
+                "children": [
+                  {
+                    "id": "node_1773207206007",
+                    "topic": "국가 선택",
+                    "expanded": true,
+                    "children": [
+                      {
+                        "id": "node_1773207224312",
+                        "topic": "한국",
+                        "expanded": true,
+                        "children": [
+                          {
+                            "id": "cdb6e9246fb59c71",
+                            "topic": "수강 장소",
+                            "expanded": true,
+                            "children": [
+                              {
+                                "id": "cdb721692d1284ba",
+                                "topic": "재설치 메시지",
+                                "expanded": true
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node_1773207225111",
+                        "topic": "일본",
+                        "expanded": true
+                      },
+                      {
+                        "id": "node_1773207226741",
+                        "topic": "그 외",
+                        "expanded": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "node4",
+                "topic": "macOS",
+                "expanded": true
+              },
+              {
+                "id": "node5",
+                "topic": "Android",
+                "expanded": true
+              },
+              {
+                "id": "node6",
+                "topic": "iOS",
+                "expanded": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
